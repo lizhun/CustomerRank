@@ -10,9 +10,9 @@ namespace CustomerRankWeb.Controllers
 
         private readonly CustomerRankService _CustomerRankService;
 
-        private readonly ILogger<CustomerController> _logger;
+        private readonly ILogger<LeaderboardController> _logger;
 
-        public LeaderboardController(ILogger<CustomerController> logger, CustomerRankService customerRankService)
+        public LeaderboardController(ILogger<LeaderboardController> logger, CustomerRankService customerRankService)
         {
             _logger = logger;
             _CustomerRankService = customerRankService;
