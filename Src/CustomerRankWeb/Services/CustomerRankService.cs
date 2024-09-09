@@ -4,9 +4,12 @@ namespace CustomerRankWeb.Services
 {
     public class CustomerRankService
     {
+        private readonly ILogger<CustomerRankService> _logger;
+
         private readonly CustomerStoreService _CustomerStoreService;
-        public CustomerRankService(CustomerStoreService customerStoreService)
+        public CustomerRankService(CustomerStoreService customerStoreService, ILogger<CustomerRankService> logger)
         {
+            _logger = logger;
             _CustomerStoreService = customerStoreService;
 
             //Ranking data storage
@@ -43,8 +46,11 @@ namespace CustomerRankWeb.Services
               {
                   while (!_CustomerRankChannel.Reader.Completion.IsCompleted)
                   {
-                      _ = await _CustomerRankChannel.Reader.ReadAsync(cancellationToken);
+                      var data = await _CustomerRankChannel.Reader.ReadAsync(cancellationToken);
+                      _logger.LogInformation($"Read Customer  {data} add or update");
+
                       MakeCustomerRanking();
+                      //await Task.Delay(2000);
                   }
               }, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
@@ -52,6 +58,7 @@ namespace CustomerRankWeb.Services
         public async Task SendMakeCustomerRankEventAsync(Customer customer)
         {
             //TO DO :log customers info or other things ...
+            // _logger.LogInformation($"Send Customer {customer.Id} score {customer.Score} add or update");
             await _CustomerRankChannel.Writer.WriteAsync(DateTime.Now);
         }
 
